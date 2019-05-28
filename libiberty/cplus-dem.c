@@ -1237,11 +1237,25 @@ squangle_mop_up (struct work_stuff *work)
     {
       free ((char *) work -> btypevec);
       work->btypevec = NULL;
+      if (work->bsize != 0)
+        {
+          FILE * fp;
+          fp = fopen ("/home/zenong/instrumentation/log", "a");
+          fprintf(fp, "  detected bsize error, bsize = %d\n", work->bsize);
+          fclose(fp);
+        }
     }
   if (work -> ktypevec != NULL)
     {
       free ((char *) work -> ktypevec);
       work->ktypevec = NULL;
+      if (work->ksize != 0)
+        {
+          FILE * fp;
+          fp = fopen ("/home/zenong/instrumentation/log", "a");
+          fprintf(fp, "  detected ksize error, ksize = %d\n", work->ksize);
+          fclose(fp);
+        }
     }
 }
 
