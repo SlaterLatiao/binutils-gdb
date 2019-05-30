@@ -1241,6 +1241,8 @@ squangle_mop_up (struct work_stuff *work)
 {
   /* clean up the B and K type mangling types. */
   forget_B_and_K_types (work);
+  printf("bsize = %d", work->bsize)
+  printf("ksize = %d", work->ksize)
   if (work -> btypevec != NULL)
     {
       free ((char *) work -> btypevec);
