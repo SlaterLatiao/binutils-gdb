@@ -95,6 +95,8 @@
       stdout about the mangled string.  This is not generally useful.
 */
 
+#include "instrumentation.h"
+
 #if defined (_AIX) && !defined (__GNUC__)
  #pragma alloca
 #endif
@@ -3174,6 +3176,12 @@ d_expression_1 (struct d_info *di)
       struct demangle_component *type = NULL;
       if (peek == 't')
 	type = cplus_demangle_type (di);
+      #if C597B1 == 1
+      FILE * inslog;
+      inslog = fopen ("log", "a");
+      if (!d_peek_next_char (di))
+        fprintf(inslog, "  detected bug#C597B1, location#1");
+      #endif
       d_advance (di, 2);
       return d_make_comp (di, DEMANGLE_COMPONENT_INITIALIZER_LIST,
 			  type, d_exprlist (di, 'E'));
@@ -3248,6 +3256,13 @@ d_expression_1 (struct d_info *di)
 	    struct demangle_component *left;
 	    struct demangle_component *right;
 
+        #if C597B1 == 1
+        FILE * inslog;
+        inslog = fopen ("log", "a");
+        if (code == NULL)
+          fprintf(inslog, "  detected bug#C597B1, location#2");
+        #endif
+
 	    if (op_is_new_cast (op))
 	      left = cplus_demangle_type (di);
 	    else
@@ -3274,6 +3289,13 @@ d_expression_1 (struct d_info *di)
 	    struct demangle_component *first;
 	    struct demangle_component *second;
 	    struct demangle_component *third;
+
+        #if C597B1 == 1
+        FILE * inslog;
+        inslog = fopen ("log", "a");
+        if (code == NULL)
+          fprintf(inslog, "  detected bug#C597B1, location#3");
+        #endif
 
 	    if (!strcmp (code, "qu"))
 	      {
