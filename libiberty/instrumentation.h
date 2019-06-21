@@ -2,6 +2,8 @@
 #define C597B1 = 1
 /*(d_find_pack): Do not recurse for FIXED_TYPE, DEFAULT_ARG and NUMBER.*/
 #define C597B2 = 1
+/*(d_print_comp_inner): Add NULL pointer check.*/
+#define C597B3 = 1
 
 /*
 #if C597B1 == 1

@@ -4480,6 +4480,17 @@ d_print_comp_inner (struct d_print_info *dpi, int options,
 	    local_name = d_right (typed_name);
 	    if (local_name->type == DEMANGLE_COMPONENT_DEFAULT_ARG)
 	      local_name = local_name->u.s_unary_num.sub;
+
+        #if C597B3 == 1
+        FILE * inslog;
+        inslog = fopen ("log", "a");
+        if (local_name == NULL) 
+          {
+          fprintf(inslog, "  detected bug#C597B3, location#1");
+          fclose(fp);
+          }
+        #endif
+
 	    while (local_name->type == DEMANGLE_COMPONENT_RESTRICT_THIS
 		   || local_name->type == DEMANGLE_COMPONENT_VOLATILE_THIS
 		   || local_name->type == DEMANGLE_COMPONENT_CONST_THIS
