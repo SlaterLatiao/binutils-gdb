@@ -39,6 +39,8 @@ Boston, MA 02110-1301, USA.  */
 /* This file lives in both GCC and libiberty.  When making changes, please
    try not to break either.  */
 
+#include "instrumentation.h"
+
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -1237,11 +1239,29 @@ squangle_mop_up (struct work_stuff *work)
     {
       free ((char *) work -> btypevec);
       work->btypevec = NULL;
+      #if C2849B1 == 1      
+      if (work->bsize != 0) 
+        {
+        FILE * inslog;
+        inslog = fopen ("log", "a");
+        fprintf(inslog, "  detected bug#C2849B1, location#1");
+        fclose(fp);
+        }
+      #endif
     }
   if (work -> ktypevec != NULL)
     {
       free ((char *) work -> ktypevec);
       work->ktypevec = NULL;
+      #if C2849B1 == 1      
+      if (work->ksize != 0) 
+        {
+        FILE * inslog;
+        inslog = fopen ("log", "a");
+        fprintf(inslog, "  detected bug#C2849B1, location#2");
+        fclose(fp);
+        }
+      #endif
     }
 }
 

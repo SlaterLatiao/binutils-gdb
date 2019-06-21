@@ -6,8 +6,8 @@
 #define C597B3 = 1
 /*cp-demangle.h (d_peek_next_char): Define as inline function when CHECK_DEMANGLER is defined. (d_advance): Likewise.*/
 #define C597B4 = 1
-
-
+/*PR c++/67394 PR c++/70481cplus-dem.c (squangle_mop_up): Zero bsize/ksize after freeing btypevec/ktypevec.*/
+#define C2849B1 = 1
 
 
 
