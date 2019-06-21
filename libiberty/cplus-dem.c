@@ -3019,6 +3019,15 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
 		      success = 1;
 		      break;
 		    }
+          #if C2849B2 == 1
+          else if (n == -1)
+            {
+            FILE * inslog;
+            inslog = fopen ("log", "a");
+            fprintf(inslog, "  detected bug#C2849B2, location#1");
+            fclose(fp);
+            }
+          #endif
 		}
 	      else
 		{
