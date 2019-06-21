@@ -135,11 +135,56 @@ struct d_info
    - call d_check_char(di, '\0')
    Everything else is safe.  */
 #define d_peek_char(di) (*((di)->n))
-#define d_peek_next_char(di) ((di)->n[1])
-#define d_advance(di, i) ((di)->n += (i))
+
+#if C597B4 == 1 && !defined(CHECK_DEMANGLER)
+#  define d_peek_next_char(di) ((di)->n[1])
+#  define d_advance(di, i) ((di)->n += (i))
+#else
+#  define d_peek_next_char(di) ((di)->n[1])
+#  define d_advance(di, i) ((di)->n += (i))
+#endif
+
 #define d_check_char(di, c) (d_peek_char(di) == c ? ((di)->n++, 1) : 0)
 #define d_next_char(di) (d_peek_char(di) == '\0' ? '\0' : *((di)->n++))
 #define d_str(di) ((di)->n)
+
+#if C597B4 == 1 && defined(CHECK_DEMANGLER)
+static inline char
+d_peek_next_char (const struct d_info *di)
+{
+  if (!di->n[0])
+    {
+    FILE * inslog;
+    inslog = fopen ("log", "a");
+    fprintf(inslog, "  detected bug#C597B4, location#1");
+    fclose(fp);
+    }
+  return di->n[1];
+}
+
+static inline void
+d_advance (struct d_info *di, int i)
+{
+  if (i < 0)
+    {
+    FILE * inslog;
+    inslog = fopen ("log", "a");
+    fprintf(inslog, "  detected bug#C597B4, location#2");
+    fclose(fp);
+    }
+  while (i--)
+    {
+      if (!di->n[0])
+        {
+        FILE * inslog;
+        inslog = fopen ("log", "a");
+        fprintf(inslog, "  detected bug#C597B4, location#1");
+        fclose(fp);
+        }
+      di->n++;
+    }
+}
+#endif
 
 /* Functions and arrays in cp-demangle.c which are referenced by
    functions in cp-demint.c.  */

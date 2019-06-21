@@ -1,9 +1,15 @@
-/*(d_expression_1): Fix out-of-bounds access. Check code variable for NULL before dereferencing it.*/
+/*cp-demangle.c (d_expression_1): Fix out-of-bounds access. Check code variable for NULL before dereferencing it.*/
 #define C597B1 = 1
-/*(d_find_pack): Do not recurse for FIXED_TYPE, DEFAULT_ARG and NUMBER.*/
+/*cp-demangle.c (d_find_pack): Do not recurse for FIXED_TYPE, DEFAULT_ARG and NUMBER.*/
 #define C597B2 = 1
-/*(d_print_comp_inner): Add NULL pointer check.*/
+/*cp-demangle.c (d_print_comp_inner): Add NULL pointer check.*/
 #define C597B3 = 1
+/*cp-demangle.h (d_peek_next_char): Define as inline function when CHECK_DEMANGLER is defined. (d_advance): Likewise.*/
+#define C597B4 = 1
+
+
+
+
 
 /*
 #if C597B1 == 1
