@@ -3179,8 +3179,11 @@ d_expression_1 (struct d_info *di)
       #if C597B1 == 1
       FILE * inslog;
       inslog = fopen ("log", "a");
-      if (!d_peek_next_char (di))
+      if (!d_peek_next_char (di)) 
+        {
         fprintf(inslog, "  detected bug#C597B1, location#1");
+        fclose(fp);
+        }
       #endif
       d_advance (di, 2);
       return d_make_comp (di, DEMANGLE_COMPONENT_INITIALIZER_LIST,
@@ -3260,7 +3263,10 @@ d_expression_1 (struct d_info *di)
         FILE * inslog;
         inslog = fopen ("log", "a");
         if (code == NULL)
+          {
           fprintf(inslog, "  detected bug#C597B1, location#2");
+          fclose(fp);
+          }
         #endif
 
 	    if (op_is_new_cast (op))
@@ -3294,7 +3300,10 @@ d_expression_1 (struct d_info *di)
         FILE * inslog;
         inslog = fopen ("log", "a");
         if (code == NULL)
+          {
           fprintf(inslog, "  detected bug#C597B1, location#3");
+          fclose(fp);
+          }
         #endif
 
 	    if (!strcmp (code, "qu"))
