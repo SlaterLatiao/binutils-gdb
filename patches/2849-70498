@@ -1,0 +1,16 @@
+diff --git a/libiberty/cplus-dem.c b/libiberty/cplus-dem.c
+index c68b9813de..f1f1edcdde 100644
+--- a/libiberty/cplus-dem.c
++++ b/libiberty/cplus-dem.c
+@@ -2999,6 +2999,11 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
+ 		      success = 1;
+ 		      break;
+ 		    }
++          else if (n == -1)
++            {
++              success = 0;
++              break;
++            }
+ 		}
+ 	      else
+ 		{

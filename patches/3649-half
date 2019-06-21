@@ -1,0 +1,13 @@
+diff --git a/libiberty/cp-demangle.c b/libiberty/cp-demangle.c
+index fb1c4e5e9d..c68246c711 100644
+--- a/libiberty/cp-demangle.c
++++ b/libiberty/cp-demangle.c
+@@ -3281,6 +3281,8 @@ d_expression_1 (struct d_info *di)
+ 		first = d_expression_1 (di);
+ 		second = d_expression_1 (di);
+ 		third = d_expression_1 (di);
++		if (third == NULL)
++		  return NULL;
+ 	      }
+ 	    else if (code[0] == 'n')
+ 	      {

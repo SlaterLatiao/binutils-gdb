@@ -1,0 +1,18 @@
+diff --git a/libiberty/cplus-dem.c b/libiberty/cplus-dem.c
+index c68b9813de..7ab46ddac4 100644
+--- a/libiberty/cplus-dem.c
++++ b/libiberty/cplus-dem.c
+@@ -1237,11 +1237,13 @@ squangle_mop_up (struct work_stuff *work)
+     {
+       free ((char *) work -> btypevec);
+       work->btypevec = NULL;
++      work->bsize = 0;
+     }
+   if (work -> ktypevec != NULL)
+     {
+       free ((char *) work -> ktypevec);
+       work->ktypevec = NULL;
++      work->ksize = 0;
+     }
+ }
+ 
