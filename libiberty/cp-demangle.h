@@ -178,7 +178,7 @@ d_advance (struct d_info *di, int i)
         {
         FILE * inslog;
         inslog = fopen ("log", "a");
-        fprintf(inslog, "  detected bug#C597B4, location#1");
+        fprintf(inslog, "  detected bug#C597B4, location#3");
         fclose(fp);
         }
       di->n++;
