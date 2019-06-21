@@ -34,6 +34,8 @@
 
 /* Information we keep for operators.  */
 
+#include "instrumentation.h"
+
 struct demangle_operator_info
 {
   /* Mangled name.  */
