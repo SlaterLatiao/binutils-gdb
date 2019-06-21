@@ -4244,6 +4244,16 @@ d_find_pack (struct d_print_info *dpi,
     case DEMANGLE_COMPONENT_DTOR:
       return d_find_pack (dpi, dc->u.s_dtor.name);
 
+    #if C597B2 == 1
+    case DEMANGLE_COMPONENT_FIXED_TYPE:
+    case DEMANGLE_COMPONENT_DEFAULT_ARG:
+    case DEMANGLE_COMPONENT_NUMBER:
+    FILE * inslog;
+    inslog = fopen ("log", "a");
+    fprintf(inslog, "  detected bug#C597B2, location#1");
+    fclose(fp);
+    #endif
+
     default:
       a = d_find_pack (dpi, d_left (dc));
       if (a)
