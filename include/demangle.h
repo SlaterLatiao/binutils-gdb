@@ -25,6 +25,7 @@
    Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA
    02110-1301, USA.  */
 
+#include "instrumentation.h"
 
 #if !defined (DEMANGLE_H)
 #define DEMANGLE_H
@@ -655,7 +656,11 @@ cplus_demangle_v3_components (const char *mangled, int options, void **mem);
 
 extern char *
 cplus_demangle_print (int options,
+                      #if C4708B1 == 1
+                      struct demangle_component *tree,
+                      #else
                       const struct demangle_component *tree,
+                      #endif
                       int estimated_length,
                       size_t *p_allocated_size);
 
@@ -675,7 +680,11 @@ cplus_demangle_print (int options,
 
 extern int
 cplus_demangle_print_callback (int options,
+                              #if C4708B1 == 1
+                               struct demangle_component *tree,
+                              #else
                                const struct demangle_component *tree,
+                              #endif
                                demangle_callbackref callback, void *opaque);
 
 #ifdef __cplusplus

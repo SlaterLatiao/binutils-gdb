@@ -164,11 +164,20 @@ static struct demangle_component *d_mangled_name (struct d_info *, int);
 static struct demangle_component *d_type (struct d_info *);
 
 #define cplus_demangle_print d_print
+#if C4708B1 == 1
+static char *d_print (int, struct demangle_component *, int, size_t *);
+#else
 static char *d_print (int, const struct demangle_component *, int, size_t *);
+#endif
 
 #define cplus_demangle_print_callback d_print_callback
+#if C4708B1 == 1
+static int d_print_callback (int, struct demangle_component *,
+                             demangle_callbackref, void *);
+#else
 static int d_print_callback (int, const struct demangle_component *,
                              demangle_callbackref, void *);
+#endif
 
 #define cplus_demangle_init_info d_init_info
 static void d_init_info (const char *, int, size_t, struct d_info *);
@@ -256,7 +265,11 @@ struct d_print_mod
      in which they appeared in the mangled string.  */
   struct d_print_mod *next;
   /* The modifier.  */
+  #if C4708B1 == 1
+  struct demangle_component *mod;
+  #else
   const struct demangle_component *mod;
+  #endif
   /* Whether this modifier was printed.  */
   int printed;
   /* The list of templates which applies to this modifier.  */
@@ -516,7 +529,11 @@ static inline void d_append_string (struct d_print_info *, const char *);
 static inline char d_last_char (struct d_print_info *);
 
 static void
+#if C4708B1 == 1
+d_print_comp (struct d_print_info *, int, struct demangle_component *);
+#else
 d_print_comp (struct d_print_info *, int, const struct demangle_component *);
+#endif
 
 static void
 d_print_java_identifier (struct d_print_info *, const char *, int);
@@ -525,23 +542,43 @@ static void
 d_print_mod_list (struct d_print_info *, int, struct d_print_mod *, int);
 
 static void
+#if C4708B1 == 1
+d_print_mod (struct d_print_info *, int, struct demangle_component *);
+#else
 d_print_mod (struct d_print_info *, int, const struct demangle_component *);
+#endif
 
 static void
 d_print_function_type (struct d_print_info *, int,
+                      #if C4708B1 == 1
+                       struct demangle_component *,
+                      #else
                        const struct demangle_component *,
+                      #endif
                        struct d_print_mod *);
 
 static void
 d_print_array_type (struct d_print_info *, int,
+                    #if C4708B1 == 1
+                    struct demangle_component *,
+                    #else
                     const struct demangle_component *,
+                    #endif
                     struct d_print_mod *);
 
 static void
+#if C4708B1 == 1
+d_print_expr_op (struct d_print_info *, int, struct demangle_component *);
+#else
 d_print_expr_op (struct d_print_info *, int, const struct demangle_component *);
+#endif
 
 static void
+#if C4708B1 == 1
+d_print_cast (struct d_print_info *, int, struct demangle_component *);
+#else
 d_print_cast (struct d_print_info *, int, const struct demangle_component *);
+#endif
 
 static int d_demangle_callback (const char *, int,
                                 demangle_callbackref, void *);
@@ -875,6 +912,9 @@ d_make_empty (struct d_info *di)
   if (di->next_comp >= di->num_comps)
     return NULL;
   p = &di->comps[di->next_comp];
+  #if C4708B1 == 1
+  ->d_printing = 0;
+  #endif
   ++di->next_comp;
   return p;
 }
@@ -4108,7 +4148,11 @@ d_last_char (struct d_print_info *dpi)
 CP_STATIC_IF_GLIBCPP_V3
 int
 cplus_demangle_print_callback (int options,
+                               #if C4708B1 == 1
+                               struct demangle_component *dc,
+                               #else
                                const struct demangle_component *dc,
+                               #endif
                                demangle_callbackref callback, void *opaque)
 {
   struct d_print_info dpi;
@@ -4147,7 +4191,11 @@ cplus_demangle_print_callback (int options,
 
 CP_STATIC_IF_GLIBCPP_V3
 char *
+#if C4708B1 == 1
+cplus_demangle_print (int options, struct demangle_component *dc,
+#else
 cplus_demangle_print (int options, const struct demangle_component *dc,
+#endif
                       int estimate, size_t *palc)
 {
   struct d_growable_string dgs;
@@ -4286,7 +4334,11 @@ d_pack_length (const struct demangle_component *dc)
 
 static void
 d_print_subexpr (struct d_print_info *dpi, int options,
-		 const struct demangle_component *dc)
+  #if C4708B1 == 1
+		 struct demangle_component *dc)
+  #else
+     const struct demangle_component *dc)
+  #endif
 {
   int simple = 0;
   if (dc->type == DEMANGLE_COMPONENT_NAME
@@ -4361,12 +4413,19 @@ d_get_saved_scope (struct d_print_info *dpi,
 
 static void
 d_print_comp_inner (struct d_print_info *dpi, int options,
-		  const struct demangle_component *dc)
+      #if C4708B1 == 1
+		  struct demangle_component *dc)
+      #else
+      const struct demangle_component *dc)
+      #endif
 {
   /* Magic variable to let reference smashing skip over the next modifier
      without needing to modify *dc.  */
+  #if C4708B1 == 1
+  struct demangle_component *mod_inner = NULL;
+  #else
   const struct demangle_component *mod_inner = NULL;
-
+  #endif
   /* Variable used to store the current templates while a previously
      captured scope is used.  */
   struct d_print_template *saved_templates;
@@ -5439,9 +5498,19 @@ d_print_comp_inner (struct d_print_info *dpi, int options,
 
 static void
 d_print_comp (struct d_print_info *dpi, int options,
-	      const struct demangle_component *dc)
+        #if C4708B1 == 1
+	      struct demangle_component *dc)
+        #else
+        const struct demangle_component *dc)
+        #endif
 {
   struct d_component_stack self;
+  #if C4708B1 == 1
+  if (dc == NULL || dc->d_printing > 1)
+    print_detection("C4708B1", 1);
+  else
+    dc->d_printing++;
+  #endif
 
   self.dc = dc;
   self.parent = dpi->component_stack;
@@ -5450,6 +5519,9 @@ d_print_comp (struct d_print_info *dpi, int options,
   d_print_comp_inner (dpi, options, dc);
 
   dpi->component_stack = self.parent;
+  #if C4708B1 == 1
+  dc->d_printing--;
+  #endif
 }
 
 /* Print a Java dentifier.  For Java we try to handle encoded extended
@@ -5600,7 +5672,11 @@ d_print_mod_list (struct d_print_info *dpi, int options,
 
 static void
 d_print_mod (struct d_print_info *dpi, int options,
+            #if C4708B1 == 1
+             struct demangle_component *mod)
+            #else
              const struct demangle_component *mod)
+            #endif
 {
   switch (mod->type)
     {
@@ -5669,7 +5745,11 @@ d_print_mod (struct d_print_info *dpi, int options,
 
 static void
 d_print_function_type (struct d_print_info *dpi, int options,
+                      #if C4708B1 == 1
+                       struct demangle_component *dc,
+                      #else
                        const struct demangle_component *dc,
+                      #endif
                        struct d_print_mod *mods)
 {
   int need_paren;
@@ -5751,7 +5831,11 @@ d_print_function_type (struct d_print_info *dpi, int options,
 
 static void
 d_print_array_type (struct d_print_info *dpi, int options,
+                    #if C4708B1 == 1
+                    struct demangle_component *dc,
+                    #else
                     const struct demangle_component *dc,
+                    #endif
                     struct d_print_mod *mods)
 {
   int need_space;
@@ -5805,7 +5889,11 @@ d_print_array_type (struct d_print_info *dpi, int options,
 
 static void
 d_print_expr_op (struct d_print_info *dpi, int options,
+                #if C4708B1 == 1
+                 struct demangle_component *dc)
+                #else
                  const struct demangle_component *dc)
+                #endif
 {
   if (dc->type == DEMANGLE_COMPONENT_OPERATOR)
     d_append_buffer (dpi, dc->u.s_operator.op->name,
@@ -5818,7 +5906,11 @@ d_print_expr_op (struct d_print_info *dpi, int options,
 
 static void
 d_print_cast (struct d_print_info *dpi, int options,
+              #if C4708B1 == 1
+              struct demangle_component *dc)
+              #else
               const struct demangle_component *dc)
+              #endif
 {
   struct d_print_template dpt;
 

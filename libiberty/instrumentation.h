@@ -16,7 +16,8 @@
 #define C3648B1 = 1
 /*demangler crash with missing :? or fold expression component.*/
 #define C3649B1 = 1
-
+/*PR demangler/70909 PR demangler/67264 demangle.h (struct demangle_component): Add d_printing field. (cplus_demangle_print): Remove const qualifier from tree parameter. (cplus_demangle_print_callback): Likewise.*/
+#define C4708B1 = 1
 
 void print_detection(char id[], int i)
 {
@@ -25,6 +26,8 @@ void print_detection(char id[], int i)
   fprintf(inslog, "  detected bug#%s, location#%d\n", id, i);
   close(inslog);
 }
+
+
 /*
 #if C597B1 == 1
 if (!d_peek_next_char (di)) 
