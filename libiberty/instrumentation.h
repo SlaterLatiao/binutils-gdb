@@ -12,16 +12,17 @@
 #define C2849B2 = 1
 /*PR c++/70926 cplus-dem.c: Handle large values and overflow when demangling length variables.*/
 #define C2849B3 = 1
-
+/*cplus-dem.c (demangle_signature): After 'H', template function, no success and don't advance position if end of string reached. (demangle_template): After 'z', template name, return zero on premature end of string.*/
+#define C3648B1 = 1
 
 /*
 #if C597B1 == 1
-      FILE * inslog;
-      inslog = fopen ("log", "a");
-      if (!d_peek_next_char (di)) 
-        {
-        fprintf(inslog, "  detected bug#C597B1, location#1");
-        fclose(fp);
-        }
-      #endif
+if (!d_peek_next_char (di)) 
+  {
+    FILE * inslog;
+    inslog = fopen ("log", "a");
+    fprintf(inslog, "  detected bug#C597B1, location#1");
+    fclose(inslog);
+  }
+#endif
 */

@@ -1646,6 +1646,15 @@ demangle_signature (struct work_stuff *work,
 					   0);
 	      if (!(work->constructor & 1))
 		expect_return_type = 1;
+        #if C3648B1 == 1
+        if (!**mangled)
+          {
+            FILE * inslog;
+            inslog = fopen ("log", "a");
+            fprintf(inslog, "  detected bug#C3648B1, location#1");
+            fclose(inslog);
+          }
+        #endif
 	      (*mangled)++;
 	      break;
 	    }
@@ -2134,6 +2143,15 @@ demangle_template (struct work_stuff *work, const char **mangled,
 	{
 	  int idx;
 	  (*mangled)++;
+    #if C3648B1 == 1
+    if (**mangled == '\0')
+      {
+        FILE * inslog;
+        inslog = fopen ("log", "a");
+        fprintf(inslog, "  detected bug#C3648B1, location#2");
+        fclose(inslog);
+      }
+    #endif
 	  (*mangled)++;
 
 	  idx = consume_count_with_underscores (mangled);
@@ -2982,6 +3000,15 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
       && strchr (cplus_markers, (*mangled)[1]) != NULL
       && (*mangled)[2] == '_')
     {
+      #if C3648B1 == 1
+      if ((*mangled)[1] == '\0')
+        {
+          FILE * inslog;
+          inslog = fopen ("log", "a");
+          fprintf(inslog, "  detected bug#C3648B1, location#3");
+          fclose(inslog);
+        }
+      #endif
       /* Found a GNU style destructor, get past "_<CPLUS_MARKER>_" */
       (*mangled) += 3;
       work -> destructor += 1;
@@ -2995,6 +3022,15 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
 		   && (*mangled)[2] == 't'
 		   && strchr (cplus_markers, (*mangled)[3]) != NULL)))
     {
+      #if C3648B1 == 1
+      if ((*mangled)[2] == 't' && (*mangled)[3] == '\0' && strchr (cplus_markers, (*mangled)[3]) != NULL)
+        {
+          FILE * inslog;
+          inslog = fopen ("log", "a");
+          fprintf(inslog, "  detected bug#C3648B1, location#4");
+          fclose(inslog);
+        }
+      #endif
       /* Found a GNU style virtual table, get past "_vt<CPLUS_MARKER>"
          and create the decl.  Note that we consume the entire mangled
 	 input string, which means that demangle_signature has no work
@@ -3760,6 +3796,12 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
 
 		if (*(*mangled)++ != 'F')
 		  {
+        #if C3648B1 == 1
+        FILE * inslog;
+        inslog = fopen ("log", "a");
+        fprintf(inslog, "  detected bug#C3648B1, location#5");
+        fclose(inslog);
+        #endif
 		    success = 0;
 		    break;
 		  }
