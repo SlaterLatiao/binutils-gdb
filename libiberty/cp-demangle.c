@@ -321,9 +321,15 @@ struct d_info_checkpoint
   const char *n;
   int next_comp;
   int next_sub;
+  #if C5675B1 ！= 1
   int did_subs;
+  #endif
   int expansion;
 };
+
+#if C5675B1 == 1
+#define MAX_RECURSION_COUNT 1024
+#endif
 
 enum { D_PRINT_BUFFER_LENGTH = 256 };
 struct d_print_info
@@ -347,6 +353,9 @@ struct d_print_info
   struct d_print_mod *modifiers;
   /* Set to 1 if we saw a demangling error.  */
   int demangle_failure;
+  #if C5675B1 == 1
+  int recursion;
+  #endif
   /* The current index into any template argument packs we are using
      for printing.  */
   int pack_index;
@@ -1683,6 +1692,10 @@ d_number (struct d_info *di)
 	    ret = - ret;
 	  return ret;
 	}
+      #if C5675B1 == 1
+      if (ret > ((INT_MAX - (peek - '0')) / 10))
+        print_detection("C5675B1", 1);
+      #endif
       ret = ret * 10 + peek - '0';
       d_advance (di, 1);
       peek = d_peek_char (di);
@@ -2990,7 +3003,9 @@ d_template_param (struct d_info *di)
   if (param < 0)
     return NULL;
 
+  #if C5675B1 != 1
   ++di->did_subs;
+  #endif
 
   return d_make_template_param (di, param);
 }
@@ -3745,7 +3760,9 @@ d_substitution (struct d_info *di, int prefix)
       if (id >= (unsigned int) di->next_sub)
 	return NULL;
 
+      #if C5675B1 != 1
       ++di->did_subs;
+      #endif
 
       return di->subs[id];
     }
@@ -3795,7 +3812,12 @@ d_substitution (struct d_info *di, int prefix)
 		  /* If there are ABI tags on the abbreviation, it becomes
 		     a substitution candidate.  */
 		  c = d_abi_tags (di, c);
+      #if C5675B1 == 1
+      if (! d_add_substitution (di, c))
+        print_detection("C5675B1", 2);
+      #else
 		  d_add_substitution (di, c);
+      #endif
 		}
 	      return c;
 	    }
@@ -3811,7 +3833,9 @@ d_checkpoint (struct d_info *di, struct d_info_checkpoint *checkpoint)
   checkpoint->n = di->n;
   checkpoint->next_comp = di->next_comp;
   checkpoint->next_sub = di->next_sub;
+  #if C5675B1 != 1
   checkpoint->did_subs = di->did_subs;
+  #endif
   checkpoint->expansion = di->expansion;
 }
 
@@ -3821,7 +3845,9 @@ d_backtrack (struct d_info *di, struct d_info_checkpoint *checkpoint)
   di->n = checkpoint->n;
   di->next_comp = checkpoint->next_comp;
   di->next_sub = checkpoint->next_sub;
+  #if C5675B1 != 1
   di->did_subs = checkpoint->did_subs;
+  #endif
   di->expansion = checkpoint->expansion;
 }
 
@@ -4052,6 +4078,9 @@ d_print_init (struct d_print_info *dpi, demangle_callbackref callback,
   dpi->opaque = opaque;
 
   dpi->demangle_failure = 0;
+  #if C5675B1 == 1
+  dpi->recursion = 0;
+  #endif
 
   dpi->component_stack = NULL;
 
@@ -5505,6 +5534,11 @@ d_print_comp (struct d_print_info *dpi, int options,
         #endif
 {
   struct d_component_stack self;
+
+  #if C5675B1 == 1
+  dpi->recursion++;
+  #endif
+
   #if C4708B1 == 1
   if (dc == NULL || dc->d_printing > 1)
     print_detection("C4708B1", 1);
@@ -5519,6 +5553,9 @@ d_print_comp (struct d_print_info *dpi, int options,
   d_print_comp_inner (dpi, options, dc);
 
   dpi->component_stack = self.parent;
+  #if C5675B1 == 1
+  dpi->recursion--;
+  #endif
   #if C4708B1 == 1
   dc->d_printing--;
   #endif
@@ -5975,7 +6012,9 @@ cplus_demangle_init_info (const char *mangled, int options, size_t len,
      chars in the mangled string.  */
   di->num_subs = len;
   di->next_sub = 0;
+  #if C5675B1 != 1
   di->did_subs = 0;
+  #endif
 
   di->last_name = NULL;
 

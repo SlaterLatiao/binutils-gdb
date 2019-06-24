@@ -496,12 +496,18 @@ static int
 consume_count (const char **type)
 {
   int count = 0;
+  #if C5675B1 == 1
+  int count2 = 0;
+  #endif
 
   if (! ISDIGIT ((unsigned char)**type))
     return -1;
 
   while (ISDIGIT ((unsigned char)**type))
     {
+      #if C5675B1 == 1
+      count2 = count;
+      #endif
       count *= 10;
 
       /* Check for overflow.
@@ -509,19 +515,39 @@ consume_count (const char **type)
 	 no power of two is divisible by ten, so if an overflow occurs
 	 when multiplying by ten, the result will not be a multiple of
 	 ten.  */
+      #if C5675B1 == 1
+      const int digit = **type - '0';
+      if (count2 > ((INT_MAX - digit) / 10) && (count % 10) == 0)
+        print_detection("C5675B1", 3);
+      #endif
       if ((count % 10) != 0)
 	{
+    #if C5675B1 == 1
+    if (count2 <= ((INT_MAX - digit) / 10))
+      print_detection("C5675B1", 4);
+    #endif
 	  while (ISDIGIT ((unsigned char) **type))
 	    (*type)++;
 	  return -1;
 	}
 
       count += **type - '0';
+      #if C5675B1 == 1
+      count2 *= 10;
+      count2 += digit;
+      #endif
       (*type)++;
     }
 
   if (count < 0)
     count = -1;
+
+  #if C5675B1 == 1
+  if (count2 < 0)
+    count2 = -1;
+  if (count != count2)
+    print_detection("C5675B1", 5);
+  #endif
 
   return (count);
 }
@@ -3167,6 +3193,10 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
       delta = consume_count (mangled);
       if (delta == -1)
 	success = 0;
+      #if C5675B1 == 1
+      else if (**mangled != '_' && success != 0)
+        print_detection("C5675B1", 6);
+      #endif
       else
 	{
 	  char *method = internal_cplus_demangle (work, ++*mangled);

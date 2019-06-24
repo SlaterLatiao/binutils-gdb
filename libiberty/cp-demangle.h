@@ -26,7 +26,7 @@
 
    You should have received a copy of the GNU General Public License
    along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA. 
+   Foundation, Inc., 51 Franklin Street - Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
 /* This file provides some definitions shared by cp-demangle.c and
@@ -117,7 +117,9 @@ struct d_info
   /* The number of substitutions which we actually made from the subs
      array, plus the number of template parameter references we
      saw.  */
+  #if C5675B1 != 1
   int did_subs;
+  #endif
   /* The last name we saw, for constructors and destructors.  */
   struct demangle_component *last_name;
   /* A running total of the length of large expansions from the
