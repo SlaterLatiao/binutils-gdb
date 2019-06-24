@@ -15,6 +15,13 @@
 /*cplus-dem.c (demangle_signature): After 'H', template function, no success and don't advance position if end of string reached. (demangle_template): After 'z', template name, return zero on premature end of string.*/
 #define C3648B1 = 1
 
+void print_detection(char id[], int i)
+{
+  FILE * inslog;
+  inslog = fopen ("log", "a");
+  fprintf(inslog, "  detected bug#%s, location#%d\n", id, i);
+  close(inslog);
+}
 /*
 #if C597B1 == 1
 if (!d_peek_next_char (di)) 
