@@ -138,18 +138,6 @@ struct d_info
    Everything else is safe.  */
 #define d_peek_char(di) (*((di)->n))
 
-#if C597B4 == 1 && !defined(CHECK_DEMANGLER)
-#  define d_peek_next_char(di) ((di)->n[1])
-#  define d_advance(di, i) ((di)->n += (i))
-#else
-#  define d_peek_next_char(di) ((di)->n[1])
-#  define d_advance(di, i) ((di)->n += (i))
-#endif
-
-#define d_check_char(di, c) (d_peek_char(di) == c ? ((di)->n++, 1) : 0)
-#define d_next_char(di) (d_peek_char(di) == '\0' ? '\0' : *((di)->n++))
-#define d_str(di) ((di)->n)
-
 #if C597B4 == 1 && defined(CHECK_DEMANGLER)
 static inline char
 d_peek_next_char (const struct d_info *di)
@@ -186,7 +174,14 @@ d_advance (struct d_info *di, int i)
       di->n++;
     }
 }
+#else
+#  define d_peek_next_char(di) ((di)->n[1])
+#  define d_advance(di, i) ((di)->n += (i))
 #endif
+
+#define d_check_char(di, c) (d_peek_char(di) == c ? ((di)->n++, 1) : 0)
+#define d_next_char(di) (d_peek_char(di) == '\0' ? '\0' : *((di)->n++))
+#define d_str(di) ((di)->n)
 
 /* Functions and arrays in cp-demangle.c which are referenced by
    functions in cp-demint.c.  */
