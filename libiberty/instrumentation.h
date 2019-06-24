@@ -10,7 +10,8 @@
 #define C2849B1 = 1
 /*PR c++/70492 cplus-dem.c (gnu_special): Handle case where consume_count returns -1.*/
 #define C2849B2 = 1
-
+/*PR c++/70926 cplus-dem.c: Handle large values and overflow when demangling length variables.*/
+#define C2849B3 = 1
 
 
 /*
