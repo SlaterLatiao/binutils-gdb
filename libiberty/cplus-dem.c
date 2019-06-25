@@ -4242,7 +4242,7 @@ do_hpacc_template_literal (struct work_stuff *work, const char **mangled,
     return 0;
 
   #if C2849B3 == 1
-  if (literal_len > (long) strlen (*mangled)))
+  if (literal_len > (long) strlen (*mangled))
       print_detection("C2849B3", 4);
   #endif
 
