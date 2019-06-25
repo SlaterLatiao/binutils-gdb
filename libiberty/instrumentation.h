@@ -1,3 +1,6 @@
+#ifndef INSTRUMENTATION_H
+#define INSTRUMENTATION_H
+
 /*cp-demangle.c (d_expression_1): Fix out-of-bounds access. Check code variable for NULL before dereferencing it.*/
 #define C597B1 1
 /*cp-demangle.c (d_find_pack): Do not recurse for FIXED_TYPE, DEFAULT_ARG and NUMBER.*/
@@ -23,12 +26,14 @@
 /*PR demangler/80513*/
 #define C5675B1 1
 
-void print_detection(char id[], int i)
+#include <stdio.h>
+
+void print_detection(constant char *id, int i)
 {
   FILE * inslog;
   inslog = fopen ("log", "a");
-  fprintf(inslog, "  detected bug#%s, location#%d\n", id, i);
-  close(inslog);
+  fprintf (inslog, "  detected bug#%s, location#%d\n", id, i);
+  fclose (inslog);
 }
 
 
@@ -38,3 +43,5 @@ if (!d_peek_next_char (di))
   print_detection("C597B1", 1);
 #endif
 */
+
+#endif /* instrumentation.h */
