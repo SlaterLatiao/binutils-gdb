@@ -29,7 +29,7 @@
 #include <stdio.h>
 
 static void
-print_detection(constant char *, int);
+print_detection(const char *, int);
 
 static void
 print_detection(const char *id, int i)
