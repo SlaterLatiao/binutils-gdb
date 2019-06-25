@@ -28,7 +28,11 @@
 
 #include <stdio.h>
 
-void print_detection(constant char *id, int i)
+static void
+print_detection(constant char *id, int i);
+
+static void
+print_detection(constant char *id, int i)
 {
   FILE * inslog;
   inslog = fopen ("log", "a");
