@@ -29,10 +29,10 @@
 #include <stdio.h>
 
 static void
-print_detection(constant char *id, int i);
+print_detection(constant char *, int);
 
 static void
-print_detection(constant char *id, int i)
+print_detection(const char *id, int i)
 {
   FILE * inslog;
   inslog = fopen ("log", "a");
