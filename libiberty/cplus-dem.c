@@ -4430,6 +4430,7 @@ pop_processed_type (struct work_stuff *work)
 {
   work->nproctypes--;
 }
+#endif
 
 /* Remember a K type class qualifier. */
 static void
