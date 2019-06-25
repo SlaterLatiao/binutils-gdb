@@ -12,12 +12,16 @@
 #define C2849B2 = 1
 /*PR c++/70926 cplus-dem.c: Handle large values and overflow when demangling length variables.*/
 #define C2849B3 = 1
+/*PR c++/71696 cplus-dem.c*/
+#define C3339B1 = 1
 /*cplus-dem.c (demangle_signature): After 'H', template function, no success and don't advance position if end of string reached. (demangle_template): After 'z', template name, return zero on premature end of string.*/
 #define C3648B1 = 1
 /*demangler crash with missing :? or fold expression component.*/
 #define C3649B1 = 1
 /*PR demangler/70909 PR demangler/67264 demangle.h (struct demangle_component): Add d_printing field. (cplus_demangle_print): Remove const qualifier from tree parameter. (cplus_demangle_print_callback): Likewise.*/
 #define C4708B1 = 1
+/*PR demangler/80513*/
+#define C5675B1 = 1
 
 void print_detection(char id[], int i)
 {

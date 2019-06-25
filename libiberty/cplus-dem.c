@@ -139,6 +139,11 @@ struct work_stuff
   string* previous_argument; /* The last function argument demangled.  */
   int nrepeats;         /* The number of times to repeat the previous
 			   argument.  */
+  #if C3339B1 == 1
+  int *proctypevec;
+  int proctypevec_size;
+  int nproctypes;
+  #endif
 };
 
 #define PRINT_ANSI_QUALIFIERS (work -> options & DMGL_ANSI)
@@ -429,6 +434,12 @@ iterate_demangle_function (struct work_stuff *,
                            const char **, string *, const char *);
 
 static void remember_type (struct work_stuff *, const char *, int);
+
+#if C3339B1 == 1
+static void push_processed_type (struct work_stuff *, int);
+
+static void pop_processed_type (struct work_stuff *);
+#endif
 
 static void remember_Btype (struct work_stuff *, const char *, int, int);
 
@@ -1338,6 +1349,12 @@ work_stuff_copy_to_from (struct work_stuff *to, struct work_stuff *from)
       memcpy (to->btypevec[i], from->btypevec[i], len);
     }
 
+  #if C3339B1 == 1
+  if (from->proctypevec)
+    to->proctypevec =
+      XDUPVEC (int, from->proctypevec, from->proctypevec_size);
+  #endif
+
   if (from->ntmpl_args)
     to->tmpl_argvec = XNEWVEC (char *, from->ntmpl_args);
 
@@ -1372,6 +1389,14 @@ delete_non_B_K_work_stuff (struct work_stuff *work)
       work -> typevec = NULL;
       work -> typevec_size = 0;
     }
+  #if C3339B1 == 1
+  if (work->proctypevec != NULL)
+    {
+      free (work->proctypevec);
+      work->proctypevec = NULL;
+      work->proctypevec_size = 0;
+    }
+  #endif
   if (work->tmpl_argvec)
     {
       int i;
@@ -3642,6 +3667,10 @@ static int
 do_type (struct work_stuff *work, const char **mangled, string *result)
 {
   int n;
+  #if C3339B1 == 1
+  int i;
+  int is_proctypevec;
+  #endif
   int done;
   int success;
   string decl;
@@ -3654,6 +3683,9 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
 
   done = 0;
   success = 1;
+  #if C3339B1 == 1
+  is_proctypevec = 0;
+  #endif
   while (success && !done)
     {
       int member;
@@ -3715,10 +3747,21 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
       }
     #endif
 	  else
-	    {
-	      remembered_type = work -> typevec[n];
-	      mangled = &remembered_type;
-	    }
+    #if C3339B1 == 1
+      for (i = 0; i < work->nproctypes; i++)
+        if (work -> proctypevec [i] == n)
+          print_detection("C3339B1", 1);
+
+    is_proctypevec = 1;
+    push_processed_type (work, n);
+    remembered_type = work->typevec[n];
+    mangled = &remembered_type;
+    #else
+      {
+        remembered_type = work -> typevec[n];
+  	    mangled = &remembered_type;
+      }
+    #endif
 	  break;
 
 	  /* A function */
@@ -3953,6 +3996,10 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
   else
     string_delete (result);
   string_delete (&decl);
+  #if C3339B1 == 1
+  if (is_proctypevec)
+    pop_processed_type (work);
+  #endif
 
   if (success)
     /* Assume an integral type, if we're not sure.  */
@@ -4403,6 +4450,48 @@ remember_type (struct work_stuff *work, const char *start, int len)
   work -> typevec[work -> ntypes++] = tem;
 }
 
+#if C3339B1 == 1
+static void
+push_processed_type (struct work_stuff *work, int typevec_index)
+{
+  if (work->nproctypes >= work->proctypevec_size)
+    {
+      if (!work->proctypevec_size)
+	{
+	  work->proctypevec_size = 4;
+	  work->proctypevec = XNEWVEC (int, work->proctypevec_size);
+	}
+      else
+	{
+	  if (work->proctypevec_size < 16)
+	    /* Double when small.  */
+	    work->proctypevec_size *= 2;
+	  else
+	    {
+	      /* Grow slower when large.  */
+	      if (work->proctypevec_size > (INT_MAX / 3) * 2)
+                xmalloc_failed (INT_MAX);
+              work->proctypevec_size = (work->proctypevec_size * 3 / 2);
+	    }
+          work->proctypevec
+            = XRESIZEVEC (int, work->proctypevec, work->proctypevec_size);
+	}
+    }
+    work->proctypevec [work->nproctypes++] = typevec_index;
+}
+
+static void
+pop_processed_type (struct work_stuff *work)
+{
+  work->nproctypes--;
+}
+#endif
+
+static void
+pop_processed_type (struct work_stuff *work)
+{
+  work->nproctypes--;
+}
 
 /* Remember a K type class qualifier. */
 static void
@@ -4633,10 +4722,19 @@ demangle_args (struct work_stuff *work, const char **mangled,
 		{
 		  string_append (declp, ", ");
 		}
+        #if C3339B1 == 1
+        push_processed_type (work, t);
+        #endif
 	      if (!do_arg (work, &tem, &arg))
 		{
+      #if C3339B1 == 1
+      pop_processed_type (work);
+      #endif
 		  return (0);
 		}
+        #if C3339B1 == 1
+        pop_processed_type (work);
+        #endif
 	      if (PRINT_ARG_TYPES)
 		{
 		  string_appends (declp, &arg);
