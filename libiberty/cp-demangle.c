@@ -3232,13 +3232,8 @@ d_expression_1 (struct d_info *di)
       if (peek == 't')
 	type = cplus_demangle_type (di);
       #if C597B1 == 1
-      FILE * inslog;
-      inslog = fopen ("log", "a");
       if (!d_peek_next_char (di))
-        {
-        fprintf(inslog, "  detected bug#C597B1, location#1");
-        fclose(fp);
-        }
+        print_detection("C597B1", 1);
       #endif
       d_advance (di, 2);
       return d_make_comp (di, DEMANGLE_COMPONENT_INITIALIZER_LIST,
@@ -3315,13 +3310,8 @@ d_expression_1 (struct d_info *di)
 	    struct demangle_component *right;
 
         #if C597B1 == 1
-        FILE * inslog;
-        inslog = fopen ("log", "a");
         if (code == NULL)
-          {
-          fprintf(inslog, "  detected bug#C597B1, location#2");
-          fclose(fp);
-          }
+          print_detection("C597B1", 2);
         #endif
 
 	    if (op_is_new_cast (op))
@@ -3352,13 +3342,8 @@ d_expression_1 (struct d_info *di)
 	    struct demangle_component *third;
 
         #if C597B1 == 1
-        FILE * inslog;
-        inslog = fopen ("log", "a");
         if (code == NULL)
-          {
-          fprintf(inslog, "  detected bug#C597B1, location#3");
-          fclose(fp);
-          }
+          print_detection("C597B1", 3);
         #endif
 
 	    if (!strcmp (code, "qu"))
@@ -4329,10 +4314,7 @@ d_find_pack (struct d_print_info *dpi,
     case DEMANGLE_COMPONENT_FIXED_TYPE:
     case DEMANGLE_COMPONENT_DEFAULT_ARG:
     case DEMANGLE_COMPONENT_NUMBER:
-    FILE * inslog;
-    inslog = fopen ("log", "a");
-    fprintf(inslog, "  detected bug#C597B2, location#1");
-    fclose(fp);
+    print_detection("C597B2", 1);
     #endif
 
     default:
@@ -4574,13 +4556,8 @@ d_print_comp_inner (struct d_print_info *dpi, int options,
 	      local_name = local_name->u.s_unary_num.sub;
 
         #if C597B3 == 1
-        FILE * inslog;
-        inslog = fopen ("log", "a");
         if (local_name == NULL)
-          {
-          fprintf(inslog, "  detected bug#C597B3, location#1");
-          fclose(fp);
-          }
+          print_detection("C597B3", 1);
         #endif
 
 	    while (local_name->type == DEMANGLE_COMPONENT_RESTRICT_THIS

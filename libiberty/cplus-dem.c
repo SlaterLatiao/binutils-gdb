@@ -1278,12 +1278,7 @@ squangle_mop_up (struct work_stuff *work)
       work->btypevec = NULL;
       #if C2849B1 == 1
       if (work->bsize != 0)
-        {
-        FILE * inslog;
-        inslog = fopen ("log", "a");
-        fprintf(inslog, "  detected bug#C2849B1, location#1");
-        fclose(fp);
-        }
+        print_detection("C2849B1", 1);
       #endif
     }
   if (work -> ktypevec != NULL)
@@ -1292,12 +1287,7 @@ squangle_mop_up (struct work_stuff *work)
       work->ktypevec = NULL;
       #if C2849B1 == 1
       if (work->ksize != 0)
-        {
-        FILE * inslog;
-        inslog = fopen ("log", "a");
-        fprintf(inslog, "  detected bug#C2849B1, location#2");
-        fclose(fp);
-        }
+        print_detection("C2849B1", 2);
       #endif
     }
 }
@@ -1699,12 +1689,7 @@ demangle_signature (struct work_stuff *work,
 		expect_return_type = 1;
         #if C3648B1 == 1
         if (!**mangled)
-          {
-            FILE * inslog;
-            inslog = fopen ("log", "a");
-            fprintf(inslog, "  detected bug#C3648B1, location#1");
-            fclose(inslog);
-          }
+          print_detection("C3648B1", 1);
         #endif
 	      (*mangled)++;
 	      break;
@@ -2126,12 +2111,7 @@ demangle_template_value_parm (struct work_stuff *work, const char **mangled,
 	    return -1;
     #if C2849B3 == 1
     if (symbol_len > (long) strlen (*mangled))
-      {
-        FILE * inslog;
-        inslog = fopen ("log", "a");
-        fprintf(inslog, "  detected bug#C2849B3, location#1");
-        fclose(inslog);
-      }
+      print_detection("C2849B3", 1);
     #endif
 	  if (symbol_len == 0)
 	    string_appendn (s, "0", 1);
@@ -2196,12 +2176,7 @@ demangle_template (struct work_stuff *work, const char **mangled,
 	  (*mangled)++;
     #if C3648B1 == 1
     if (**mangled == '\0')
-      {
-        FILE * inslog;
-        inslog = fopen ("log", "a");
-        fprintf(inslog, "  detected bug#C3648B1, location#2");
-        fclose(inslog);
-      }
+      print_detection("C3648B1", 2);
     #endif
 	  (*mangled)++;
 
@@ -3053,12 +3028,7 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
     {
       #if C3648B1 == 1
       if ((*mangled)[1] == '\0')
-        {
-          FILE * inslog;
-          inslog = fopen ("log", "a");
-          fprintf(inslog, "  detected bug#C3648B1, location#3");
-          fclose(inslog);
-        }
+        print_detection("C3648B1", 3);
       #endif
       /* Found a GNU style destructor, get past "_<CPLUS_MARKER>_" */
       (*mangled) += 3;
@@ -3075,12 +3045,7 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
     {
       #if C3648B1 == 1
       if ((*mangled)[2] == 't' && (*mangled)[3] == '\0' && strchr (cplus_markers, (*mangled)[3]) != NULL)
-        {
-          FILE * inslog;
-          inslog = fopen ("log", "a");
-          fprintf(inslog, "  detected bug#C3648B1, location#4");
-          fclose(inslog);
-        }
+        print_detection("C3648B1", 4);
       #endif
       /* Found a GNU style virtual table, get past "_vt<CPLUS_MARKER>"
          and create the decl.  Note that we consume the entire mangled
@@ -3117,12 +3082,7 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
 		    }
           #if C2849B2 == 1
           else if (n == -1)
-            {
-            FILE * inslog;
-            inslog = fopen ("log", "a");
-            fprintf(inslog, "  detected bug#C2849B2, location#1");
-            fclose(fp);
-            }
+            print_detection("C2849B2", 1);
           #endif
 		}
 	      else
@@ -3739,12 +3699,7 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
 	    }
     #if C2849B3 == 1
     else if (n < 0)
-      {
-        FILE * inslog;
-        inslog = fopen ("log", "a");
-        fprintf(inslog, "  detected bug#C2849B3, location#2");
-        fclose(inslog);
-      }
+      print_detection("C2849B3", 2);
     #endif
 	  else
     #if C3339B1 == 1
@@ -3870,10 +3825,7 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
 		if (*(*mangled)++ != 'F')
 		  {
         #if C3648B1 == 1
-        FILE * inslog;
-        inslog = fopen ("log", "a");
-        fprintf(inslog, "  detected bug#C3648B1, location#5");
-        fclose(inslog);
+        print_detection("C3648B1", 5);
         #endif
 		    success = 0;
 		    break;
@@ -3941,12 +3893,7 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
 	success = 0;
       #if C2849B3 == 1
       else if (n < 0)
-        {
-          FILE * inslog;
-          inslog = fopen ("log", "a");
-          fprintf(inslog, "  detected bug#C2849B3, location#3");
-          fclose(inslog);
-        }
+        print_detection("C2849B3", 3);
       #endif
       else
 	string_append (result, work->btypevec[n]);
@@ -4296,12 +4243,7 @@ do_hpacc_template_literal (struct work_stuff *work, const char **mangled,
 
   #if C2849B3 == 1
   if (literal_len > (long) strlen (*mangled)))
-      {
-        FILE * inslog;
-        inslog = fopen ("log", "a");
-        fprintf(inslog, "  detected bug#C2849B3, location#4");
-        fclose(inslog);
-      }
+      print_detection("C2849B3", 4);
   #endif
 
   /* Literal parameters are names of arrays, functions, etc.  and the
