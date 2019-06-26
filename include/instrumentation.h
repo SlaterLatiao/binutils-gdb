@@ -28,10 +28,10 @@
 
 #include <stdio.h>
 
-static void
+extern void
 print_detection(const char *, int);
 
-static void
+extern void
 print_detection(const char *id, int i)
 {
   FILE * inslog;
