@@ -461,6 +461,13 @@ struct demangle_component
 {
   /* The type of this component.  */
   enum demangle_component_type type;
+  #if C4708B1 == 1
+  /* Guard against recursive component printing.
+   Initialize to zero.  Private to d_print_comp.
+   All other fields are final after initialization.  */
+  int d_printing;
+  #endif
+
 
   union
   {

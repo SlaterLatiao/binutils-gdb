@@ -922,7 +922,7 @@ d_make_empty (struct d_info *di)
     return NULL;
   p = &di->comps[di->next_comp];
   #if C4708B1 == 1
-  ->d_printing = 0;
+  p->d_printing = 0;
   #endif
   ++di->next_comp;
   return p;
