@@ -321,7 +321,7 @@ struct d_info_checkpoint
   const char *n;
   int next_comp;
   int next_sub;
-  #if C5675B1 ！= 1
+  #if C5675B1 != 1
   int did_subs;
   #endif
   int expansion;
