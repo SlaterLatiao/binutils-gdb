@@ -126,6 +126,10 @@ extern char *alloca ();
 # endif /* alloca */
 #endif /* HAVE_ALLOCA_H */
 
+#if !defined(INT_MAX) && C5675B1 == 1)
+# define INT_MAX       (int)(((unsigned int) ~0) >> 1)          /* 0x7FFFFFFF */
+#endif
+
 #include "ansidecl.h"
 #include "libiberty.h"
 #include "demangle.h"
