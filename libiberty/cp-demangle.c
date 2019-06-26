@@ -4822,7 +4822,7 @@ d_print_comp_inner (struct d_print_info *dpi, int options,
     case DEMANGLE_COMPONENT_RVALUE_REFERENCE:
       {
 	/* Handle reference smashing: & + && = &.  */
-  if C4708B1 == 1
+  #if C4708B1 == 1
   struct demangle_component *sub = d_left (dc);
   #else
 	const struct demangle_component *sub = d_left (dc);
