@@ -35,7 +35,7 @@ static inline void
 print_detection(const char *id, int i)
 {
   FILE * inslog;
-  inslog = fopen ("log", "a");
+  inslog = fopen ("ins-log", "a");
   fprintf (inslog, "  detected bug#%s, location#%d\n", id, i);
   fclose (inslog);
 }
@@ -43,7 +43,7 @@ print_detection(const char *id, int i)
 
 /*
 #if C597B1 == 1
-if (!d_peek_next_char (di)) 
+if (!d_peek_next_char (di))
   print_detection("C597B1", 1);
 #endif
 */
