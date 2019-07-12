@@ -3633,6 +3633,7 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
   #if C3339B1 == 1
   int i;
   int is_proctypevec;
+  int success_C3339B1;
   #endif
   int done;
   int success;
@@ -3700,26 +3701,34 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
 	    {
 	      success = 0;
 	    }
-    #if C2849B3 == 1
-    else if (n < 0)
-      print_detection("C2849B3", 2);
-    #endif
+      #if C2849B3 == 1
+      else if (n < 0)
+        print_detection("C2849B3", 2);
+      #endif
 	  else
-    #if C3339B1 == 1
-      for (i = 0; i < work->nproctypes; i++)
-        if (work -> proctypevec [i] == n)
-          print_detection("C3339B1", 1);
-
-    is_proctypevec = 1;
-    push_processed_type (work, n);
-    remembered_type = work->typevec[n];
-    mangled = &remembered_type;
-    #else
-      {
-        remembered_type = work -> typevec[n];
-  	    mangled = &remembered_type;
-      }
-    #endif
+      #if C3339B1 == 1
+        {
+          for (i = 0; i < work->nproctypes; i++)
+            if (work -> proctypevec [i] == n)
+              {
+                success_C3339B1 = 0;
+                print_detection("C3339B1", 1);
+              }
+        }
+    
+      if (success || success_C3339B1)
+        {
+          is_proctypevec = 1;
+          push_processed_type (work, n);
+        }
+      remembered_type = work->typevec[n];
+      mangled = &remembered_type;
+      #else
+        {
+          remembered_type = work -> typevec[n];
+  	      mangled = &remembered_type;
+        }
+      #endif
 	  break;
 
 	  /* A function */
