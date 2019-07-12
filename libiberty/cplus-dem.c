@@ -3708,21 +3708,23 @@ do_type (struct work_stuff *work, const char **mangled, string *result)
 	  else
       #if C3339B1 == 1
         {
+          success_C3339B1 = 1;
           for (i = 0; i < work->nproctypes; i++)
             if (work -> proctypevec [i] == n)
               {
                 success_C3339B1 = 0;
                 print_detection("C3339B1", 1);
               }
+          remembered_type = work->typevec[n];
+          mangled = &remembered_type;
         }
     
-      if (success || success_C3339B1)
+      if (success && success_C3339B1)
         {
           is_proctypevec = 1;
           push_processed_type (work, n);
         }
-      remembered_type = work->typevec[n];
-      mangled = &remembered_type;
+
       #else
         {
           remembered_type = work -> typevec[n];
