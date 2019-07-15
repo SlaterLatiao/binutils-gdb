@@ -511,7 +511,7 @@ consume_count (const char **type)
 {
   int count = 0;
   #if C5675B1 == 1
-  int count2 = 0;
+  int count_C5675B1 = 0;
   #endif
 
   if (! ISDIGIT ((unsigned char)**type))
@@ -519,9 +519,6 @@ consume_count (const char **type)
 
   while (ISDIGIT ((unsigned char)**type))
     {
-      #if C5675B1 == 1
-      count2 = count;
-      #endif
       count *= 10;
 
       /* Check for overflow.
@@ -531,13 +528,13 @@ consume_count (const char **type)
 	 ten.  */
       #if C5675B1 == 1
       const int digit = **type - '0';
-      if (count2 > ((INT_MAX - digit) / 10) && (count % 10) == 0)
+      if (count_C5675B1 > ((INT_MAX - digit) / 10) && (count % 10) == 0)
         print_detection("C5675B1", 3);
       #endif
       if ((count % 10) != 0)
 	{
     #if C5675B1 == 1
-    if (count2 <= ((INT_MAX - digit) / 10))
+    if (count_C5675B1 <= ((INT_MAX - digit) / 10))
       print_detection("C5675B1", 4);
     #endif
 	  while (ISDIGIT ((unsigned char) **type))
@@ -547,8 +544,8 @@ consume_count (const char **type)
 
       count += **type - '0';
       #if C5675B1 == 1
-      count2 *= 10;
-      count2 += digit;
+      count_C5675B1 *= 10;
+      count_C5675B1 += digit;
       #endif
       (*type)++;
     }
@@ -557,9 +554,9 @@ consume_count (const char **type)
     count = -1;
 
   #if C5675B1 == 1
-  if (count2 < 0)
-    count2 = -1;
-  if (count != count2)
+  if (count_C5675B1 < 0)
+    count_C5675B1 = -1;
+  if (count != count_C5675B1)
     print_detection("C5675B1", 5);
   #endif
 
