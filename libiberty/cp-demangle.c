@@ -419,7 +419,7 @@ static struct demangle_component *d_source_name (struct d_info *);
 
 static long d_number (struct d_info *);
 
-static struct demangle_component *d_identifier (struct d_info *, int);
+static struct demangle_component *d_identifier (struct d_info *, long);
 
 static struct demangle_component *d_operator_name (struct d_info *);
 
@@ -1664,7 +1664,7 @@ d_number_component (struct d_info *di)
 /* identifier ::= <(unqualified source code identifier)>  */
 
 static struct demangle_component *
-d_identifier (struct d_info *di, int len)
+d_identifier (struct d_info *di, long len)
 {
   const char *name;
 
@@ -1685,7 +1685,7 @@ d_identifier (struct d_info *di, int len)
   /* Look for something which looks like a gcc encoding of an
      anonymous namespace, and replace it with a more user friendly
      name.  */
-  if (len >= (int) ANONYMOUS_NAMESPACE_PREFIX_LEN + 2
+  if (len >= (long) ANONYMOUS_NAMESPACE_PREFIX_LEN + 2
       && memcmp (name, ANONYMOUS_NAMESPACE_PREFIX,
 		 ANONYMOUS_NAMESPACE_PREFIX_LEN) == 0)
     {
