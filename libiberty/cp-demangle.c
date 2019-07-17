@@ -124,6 +124,10 @@ extern char *alloca ();
 # endif /* alloca */
 #endif /* HAVE_ALLOCA_H */
 
+#ifndef INT_MAX
+#define INT_MAX       (int)(((unsigned int) ~0) >> 1)          /* 0x7FFFFFFF */
+#endif
+
 #include "ansidecl.h"
 #include "libiberty.h"
 #include "demangle.h"
@@ -306,9 +310,11 @@ struct d_info_checkpoint
   const char *n;
   int next_comp;
   int next_sub;
-  int did_subs;
   int expansion;
 };
+
+/* Maximum number of times d_print_comp may be called recursively.  */
+#define MAX_RECURSION_COUNT 1024
 
 enum { D_PRINT_BUFFER_LENGTH = 256 };
 struct d_print_info
@@ -332,6 +338,9 @@ struct d_print_info
   struct d_print_mod *modifiers;
   /* Set to 1 if we saw a demangling error.  */
   int demangle_failure;
+  /* Number of times d_print_comp was recursively called.  Should not
+     be bigger than MAX_RECURSION_COUNT.  */
+  int recursion;
   /* The current index into any template argument packs we are using
      for printing.  */
   int pack_index;
@@ -1641,6 +1650,8 @@ d_number (struct d_info *di)
 	    ret = - ret;
 	  return ret;
 	}
+      if (ret > ((INT_MAX - (peek - '0')) / 10))
+        return -1;
       ret = ret * 10 + peek - '0';
       d_advance (di, 1);
       peek = d_peek_char (di);
@@ -2948,8 +2959,6 @@ d_template_param (struct d_info *di)
   if (param < 0)
     return NULL;
 
-  ++di->did_subs;
-
   return d_make_template_param (di, param);
 }
 
@@ -3670,8 +3679,6 @@ d_substitution (struct d_info *di, int prefix)
       if (id >= (unsigned int) di->next_sub)
 	return NULL;
 
-      ++di->did_subs;
-
       return di->subs[id];
     }
   else
@@ -3720,7 +3727,8 @@ d_substitution (struct d_info *di, int prefix)
 		  /* If there are ABI tags on the abbreviation, it becomes
 		     a substitution candidate.  */
 		  c = d_abi_tags (di, c);
-		  d_add_substitution (di, c);
+		  if (! d_add_substitution (di, c))
+		    return NULL;
 		}
 	      return c;
 	    }
@@ -3736,7 +3744,6 @@ d_checkpoint (struct d_info *di, struct d_info_checkpoint *checkpoint)
   checkpoint->n = di->n;
   checkpoint->next_comp = di->next_comp;
   checkpoint->next_sub = di->next_sub;
-  checkpoint->did_subs = di->did_subs;
   checkpoint->expansion = di->expansion;
 }
 
@@ -3746,7 +3753,6 @@ d_backtrack (struct d_info *di, struct d_info_checkpoint *checkpoint)
   di->n = checkpoint->n;
   di->next_comp = checkpoint->next_comp;
   di->next_sub = checkpoint->next_sub;
-  di->did_subs = checkpoint->did_subs;
   di->expansion = checkpoint->expansion;
 }
 
@@ -3977,6 +3983,7 @@ d_print_init (struct d_print_info *dpi, demangle_callbackref callback,
   dpi->opaque = opaque;
 
   dpi->demangle_failure = 0;
+  dpi->recursion = 0;
 
   dpi->component_stack = NULL;
 
@@ -5387,6 +5394,8 @@ d_print_comp (struct d_print_info *dpi, int options,
 {
   struct d_component_stack self;
 
+  dpi->recursion++;
+
   self.dc = dc;
   self.parent = dpi->component_stack;
   dpi->component_stack = &self;
@@ -5394,6 +5403,7 @@ d_print_comp (struct d_print_info *dpi, int options,
   d_print_comp_inner (dpi, options, dc);
 
   dpi->component_stack = self.parent;
+  dpi->recursion--;
 }
 
 /* Print a Java dentifier.  For Java we try to handle encoded extended
@@ -5827,7 +5837,6 @@ cplus_demangle_init_info (const char *mangled, int options, size_t len,
      chars in the mangled string.  */
   di->num_subs = len;
   di->next_sub = 0;
-  di->did_subs = 0;
 
   di->last_name = NULL;
 
