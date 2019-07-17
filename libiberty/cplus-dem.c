@@ -55,6 +55,8 @@ Boston, MA 02110-1301, USA.  */
 void * malloc ();
 void * realloc ();
 #endif
+#ifndef(INT_MAX)
+#define INT_MAX       (int)(((unsigned int) ~0) >> 1)          /* 0x7FFFFFFF */
 
 #include <demangle.h>
 #undef CURRENT_DEMANGLING_STYLE
