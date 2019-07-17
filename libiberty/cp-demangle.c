@@ -3174,6 +3174,8 @@ d_expression_1 (struct d_info *di)
       struct demangle_component *type = NULL;
       if (peek == 't')
 	type = cplus_demangle_type (di);
+      if (!d_peek_next_char (di))
+        return NULL;
       d_advance (di, 2);
       return d_make_comp (di, DEMANGLE_COMPONENT_INITIALIZER_LIST,
 			  type, d_exprlist (di, 'E'));
@@ -3248,6 +3250,8 @@ d_expression_1 (struct d_info *di)
 	    struct demangle_component *left;
 	    struct demangle_component *right;
 
+	    if (code == NULL)
+	      return NULL;
 	    if (op_is_new_cast (op))
 	      left = cplus_demangle_type (di);
 	    else
@@ -3275,7 +3279,9 @@ d_expression_1 (struct d_info *di)
 	    struct demangle_component *second;
 	    struct demangle_component *third;
 
-	    if (!strcmp (code, "qu"))
+	    if (code == NULL)
+	      return NULL;
+	    else if (!strcmp (code, "qu"))
 	      {
 		/* ?: expression.  */
 		first = d_expression_1 (di);
