@@ -655,7 +655,7 @@ cplus_demangle_v3_components (const char *mangled, int options, void **mem);
 
 extern char *
 cplus_demangle_print (int options,
-                      const struct demangle_component *tree,
+                      struct demangle_component *tree,
                       int estimated_length,
                       size_t *p_allocated_size);
 
@@ -675,7 +675,7 @@ cplus_demangle_print (int options,
 
 extern int
 cplus_demangle_print_callback (int options,
-                               const struct demangle_component *tree,
+                               struct demangle_component *tree,
                                demangle_callbackref callback, void *opaque);
 
 #ifdef __cplusplus
