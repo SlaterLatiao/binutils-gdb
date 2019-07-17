@@ -57,6 +57,7 @@ void * realloc ();
 #endif
 #ifndef INT_MAX
 #define INT_MAX       (int)(((unsigned int) ~0) >> 1)          /* 0x7FFFFFFF */
+#endif
 
 #include <demangle.h>
 #undef CURRENT_DEMANGLING_STYLE
