@@ -34,8 +34,7 @@ print_detection(const char *, int);
 static inline void
 print_detection(const char *id, int i)
 {
-  printf ("  %s - %d", id, i);
-  fflush(stdout);
+  printf ("  %s - %d\n", id, i);
 }
 
 
