@@ -34,10 +34,7 @@ print_detection(const char *, int);
 static inline void
 print_detection(const char *id, int i)
 {
-  FILE * inslog;
-  inslog = fopen ("ins-log", "a");
-  fprintf (inslog, "  detected bug#%s, location#%d\n", id, i);
-  fclose (inslog);
+  printf ("  %s - %d", id, i);
 }
 
 
