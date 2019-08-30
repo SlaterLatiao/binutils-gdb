@@ -5394,13 +5394,13 @@ d_print_comp (struct d_print_info *dpi, int options,
 	      struct demangle_component *dc)
 {
   struct d_component_stack self;
-  if (dc == NULL || dc->d_printing > 1)
+  if (dc == NULL || dc->d_printing > 1 || dpi->recursion > MAX_RECURSION_COUNT)
     {
       d_print_error (dpi);
       return;
     }
-  else
-    dc->d_printing++;
+    
+  dc->d_printing++;
   dpi->recursion++;
 
   self.dc = dc;
