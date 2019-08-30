@@ -55,6 +55,9 @@ Boston, MA 02110-1301, USA.  */
 void * malloc ();
 void * realloc ();
 #endif
+#ifndef INT_MAX
+#define INT_MAX       (int)(((unsigned int) ~0) >> 1)          /* 0x7FFFFFFF */
+#endif
 
 #include <demangle.h>
 #undef CURRENT_DEMANGLING_STYLE
@@ -500,21 +503,17 @@ consume_count (const char **type)
 
   while (ISDIGIT ((unsigned char)**type))
     {
-      count *= 10;
-
-      /* Check for overflow.
-	 We assume that count is represented using two's-complement;
-	 no power of two is divisible by ten, so if an overflow occurs
-	 when multiplying by ten, the result will not be a multiple of
-	 ten.  */
-      if ((count % 10) != 0)
+      const int digit = **type - '0';
+      /* Check for overflow.  */
+      if (count > ((INT_MAX - digit) / 10))
 	{
 	  while (ISDIGIT ((unsigned char) **type))
 	    (*type)++;
 	  return -1;
 	}
 
-      count += **type - '0';
+      count *= 10;
+      count += digit;
       (*type)++;
     }
 
@@ -3093,6 +3092,8 @@ gnu_special (struct work_stuff *work, const char **mangled, string *declp)
       delta = consume_count (mangled);
       if (delta == -1)
 	success = 0;
+      else if (**mangled != '_')
+        success = 0;
       else
 	{
 	  char *method = internal_cplus_demangle (work, ++*mangled);
