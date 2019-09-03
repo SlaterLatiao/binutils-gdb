@@ -847,6 +847,13 @@ cplus_demangle_name_to_style (const char *name)
 char *
 cplus_demangle (const char *mangled, int options)
 {
+  /** Limit the maximum length of mangled.
+   * C++ Std, Annex B (Implementation quantities): 
+   * - Number of characters in an internal identifier or macro name [1 024]. 
+   * - Arguments in one function call [256]. */ 
+  if (mangled && strlen (mangled) > 263168) 
+    return xstrdup (mangled);
+
   char *ret;
   struct work_stuff work[1];
 
@@ -4488,6 +4495,8 @@ demangle_args (struct work_stuff *work, const char **mangled,
 	    {
 	      return (0);
 	    }
+    /* C++ Standard Annex B: Parameters in one function definition [256].*/
+    if (r > 256) r = 256;
 	  while (work->nrepeats > 0 || --r >= 0)
 	    {
 	      tem = work -> typevec[t];
