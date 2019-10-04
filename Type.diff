@@ -1,0 +1,140 @@
+diff --git a/libiberty/cp-demangle.c b/libiberty/cp-demangle.c
+index fb1c4e5e9d..027329e919 100644
+--- a/libiberty/cp-demangle.c
++++ b/libiberty/cp-demangle.c
+@@ -124,6 +124,13 @@ extern char *alloca ();
+ # endif /* alloca */
+ #endif /* HAVE_ALLOCA_H */
+ 
++#ifdef HAVE_LIMITS_H
++#include <limits.h>
++#endif
++#ifndef INT_MAX
++# define INT_MAX       (int)(((unsigned int) ~0) >> 1)          /* 0x7FFFFFFF */
++#endif
++
+ #include "ansidecl.h"
+ #include "libiberty.h"
+ #include "demangle.h"
+@@ -394,7 +401,7 @@ d_make_dtor (struct d_info *, enum gnu_v3_dtor_kinds,
+              struct demangle_component *);
+ 
+ static struct demangle_component *
+-d_make_template_param (struct d_info *, long);
++d_make_template_param (struct d_info *, int);
+ 
+ static struct demangle_component *
+ d_make_sub (struct d_info *, const char *, int);
+@@ -417,7 +424,7 @@ static struct demangle_component *d_unqualified_name (struct d_info *);
+ 
+ static struct demangle_component *d_source_name (struct d_info *);
+ 
+-static long d_number (struct d_info *);
++static int d_number (struct d_info *);
+ 
+ static struct demangle_component *d_identifier (struct d_info *, int);
+ 
+@@ -1105,7 +1112,7 @@ d_make_dtor (struct d_info *di, enum gnu_v3_dtor_kinds kind,
+ /* Add a new template parameter.  */
+ 
+ static struct demangle_component *
+-d_make_template_param (struct d_info *di, long i)
++d_make_template_param (struct d_info *di, int i)
+ {
+   struct demangle_component *p;
+ 
+@@ -1121,7 +1128,7 @@ d_make_template_param (struct d_info *di, long i)
+ /* Add a new function parameter.  */
+ 
+ static struct demangle_component *
+-d_make_function_param (struct d_info *di, long i)
++d_make_function_param (struct d_info *di, int i)
+ {
+   struct demangle_component *p;
+ 
+@@ -1603,7 +1610,7 @@ d_unqualified_name (struct d_info *di)
+ static struct demangle_component *
+ d_source_name (struct d_info *di)
+ {
+-  long len;
++  int len;
+   struct demangle_component *ret;
+ 
+   len = d_number (di);
+@@ -1616,12 +1623,12 @@ d_source_name (struct d_info *di)
+ 
+ /* number ::= [n] <(non-negative decimal integer)>  */
+ 
+-static long
++static int
+ d_number (struct d_info *di)
+ {
+   int negative;
+   char peek;
+-  long ret;
++  int ret;
+ 
+   negative = 0;
+   peek = d_peek_char (di);
+@@ -1848,7 +1855,7 @@ d_java_resource (struct d_info *di)
+ {
+   struct demangle_component *p = NULL;
+   struct demangle_component *next = NULL;
+-  long len, i;
++  int len, i;
+   char c;
+   const char *str;
+ 
+@@ -1990,7 +1997,7 @@ d_special_name (struct d_info *di)
+ 	case 'C':
+ 	  {
+ 	    struct demangle_component *derived_type;
+-	    long offset;
++	    int offset;
+ 	    struct demangle_component *base_type;
+ 
+ 	    derived_type = cplus_demangle_type (di);
+@@ -2916,10 +2923,10 @@ d_pointer_to_member_type (struct d_info *di)
+ 
+ /* <non-negative number> _ */
+ 
+-static long
++static int
+ d_compact_number (struct d_info *di)
+ {
+-  long num;
++  int num;
+   if (d_peek_char (di) == '_')
+     num = 0;
+   else if (d_peek_char (di) == 'n')
+@@ -2939,7 +2946,7 @@ d_compact_number (struct d_info *di)
+ static struct demangle_component *
+ d_template_param (struct d_info *di)
+ {
+-  long param;
++  int param;
+ 
+   if (! d_check_char (di, 'T'))
+     return NULL;
+@@ -3522,7 +3529,7 @@ static struct demangle_component *
+ d_unnamed_type (struct d_info *di)
+ {
+   struct demangle_component *ret;
+-  long num;
++  int num;
+ 
+   if (! d_check_char (di, 'U'))
+     return NULL;
+@@ -4048,10 +4055,10 @@ d_append_string (struct d_print_info *dpi, const char *s)
+ }
+ 
+ static inline void
+-d_append_num (struct d_print_info *dpi, long l)
++d_append_num (struct d_print_info *dpi, int l)
+ {
+   char buf[25];
+-  sprintf (buf,"%ld", l);
++  sprintf (buf,"%d", l);
+   d_append_string (dpi, buf);
+ }
+ 
